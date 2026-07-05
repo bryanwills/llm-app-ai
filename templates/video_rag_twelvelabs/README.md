@@ -46,13 +46,13 @@ video files ─▶ pw.io.fs.read (bytes)
             ─▶ REST API on :8000
 ```
 
-The TwelveLabs components live in the local
-[`pathway_twelvelabs`](pathway_twelvelabs/__init__.py) package:
+The TwelveLabs components are part of the Pathway LLM xpack:
 
-- `TwelveLabsVideoParser` — a Pathway parser (`pw.UDF`) that uploads the video
-  bytes as a TwelveLabs asset and asks Pegasus to describe it.
-- `MarengoEmbedder` — a Pathway embedder (`BaseEmbedder`) that calls the Marengo
-  embedding endpoint.
+- [`TwelveLabsVideoParser`](https://pathway.com/developers/api-docs/pathway-xpacks-llm/parsers#pathway.xpacks.llm.parsers.TwelveLabsVideoParser)
+  — a Pathway parser that uploads the video bytes as a TwelveLabs asset and asks
+  Pegasus to describe it.
+- [`MarengoEmbedder`](https://pathway.com/developers/api-docs/pathway-xpacks-llm/embedders#pathway.xpacks.llm.embedders.MarengoEmbedder)
+  — a Pathway embedder that calls the Marengo embedding endpoint.
 
 Both are wired in entirely through [`app.yaml`](app.yaml), so you can swap models,
 prompts, the data source, or the LLM without touching any Python.
@@ -76,12 +76,14 @@ prompts, the data source, or the LLM without touching any Python.
 - A TwelveLabs API key. Get a free one at [twelvelabs.io](https://twelvelabs.io) —
   there is a generous free tier.
 - An OpenAI API key for the question-answering LLM.
+- A Pathway license key, required by the `TwelveLabsVideoParser`. Get a free one
+  at [pathway.com/features](https://pathway.com/features).
 
 Copy `.env.example` to `.env` and fill in your keys:
 
 ```bash
 cp .env.example .env
-# edit .env and set TWELVELABS_API_KEY and OPENAI_API_KEY
+# edit .env and set TWELVELABS_API_KEY, OPENAI_API_KEY and PATHWAY_LICENSE_KEY
 ```
 
 Put one or more videos (e.g. `.mp4`, `.mov`) into the `data/` directory.
@@ -112,11 +114,5 @@ curl -X POST http://localhost:8000/v1/pw_ai_answer \
 
 ## Tests
 
-A small test suite lives in [`test_twelvelabs.py`](test_twelvelabs.py). The
-no-network tests run without any credentials; the live Marengo embedding test is
-skipped unless `TWELVELABS_API_KEY` is set:
-
-```bash
-pip install -r requirements.txt pytest
-TWELVELABS_API_KEY=... pytest templates/video_rag_twelvelabs/test_twelvelabs.py
-```
+The TwelveLabs components are tested as part of the Pathway core test suite, in
+[`python/pathway/xpacks/llm/tests/test_twelvelabs.py`](https://github.com/pathwaycom/pathway/blob/main/python/pathway/xpacks/llm/tests/test_twelvelabs.py).

@@ -32,15 +32,17 @@ $sources:
 # The parser turns each video into text using the TwelveLabs Pegasus model.
 # The TWELVELABS_API_KEY environment variable must be set (see .env.example).
 # You can customize the prompt to extract exactly what your application needs.
-$parser: !pathway_twelvelabs.TwelveLabsVideoParser
+$parser: !pw.xpacks.llm.parsers.TwelveLabsVideoParser
   model: "pegasus1.5"
   max_tokens: 2048
   cache_strategy: !pw.udfs.DefaultCache {}
+  # Uncomment so that a single malformed video does not halt the pipeline:
+  # on_error: "skip"
   # prompt: "Describe this video, focusing on the products that appear and any prices shown."
 
 # The embedder converts the parsed text into 512-dimensional multimodal
 # embeddings using the TwelveLabs Marengo model.
-$embedder: !pathway_twelvelabs.MarengoEmbedder
+$embedder: !pw.xpacks.llm.embedders.MarengoEmbedder
   model: "marengo3.0"
   cache_strategy: !pw.udfs.DefaultCache {}
   retry_strategy: !pw.udfs.ExponentialBackoffRetryStrategy {}

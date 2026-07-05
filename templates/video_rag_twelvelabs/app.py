@@ -3,23 +3,22 @@
 # Copyright © 2026 Pathway
 
 import logging
+import os
 from pathlib import Path
 from warnings import warn
 
 import pathway as pw
-
-# `pathway_twelvelabs` registers the TwelveLabsVideoParser and MarengoEmbedder
-# classes so they can be referenced from `app.yaml` via the `!` YAML tags.
-import pathway_twelvelabs  # noqa: F401
 from dotenv import load_dotenv
 from pathway.xpacks.llm.question_answering import BaseRAGQuestionAnswerer
 from pathway.xpacks.llm.servers import QASummaryRestServer
 from pydantic import BaseModel, ConfigDict, InstanceOf
 
-# To use advanced features with Pathway Live Data Framework Scale, get your free license key from
-# https://pathway.com/features and paste it below.
-# To use Pathway Live Data Framework Community, comment out the line below.
-pw.set_license_key("demo-license-key-with-telemetry")
+# The TwelveLabsVideoParser used by this template is a Pathway Scale feature.
+# Get your free license key from https://pathway.com/features and set it in the
+# PATHWAY_LICENSE_KEY environment variable (see .env.example) or paste it below.
+pw.set_license_key(
+    os.environ.get("PATHWAY_LICENSE_KEY", "demo-license-key-with-telemetry")
+)
 
 logging.basicConfig(
     level=logging.INFO,
